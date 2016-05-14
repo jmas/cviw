@@ -1,0 +1,212 @@
+@charset "utf-8";
+
+html, body {
+  position: relative;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  font-family: sans-serif;
+  background-color: #1C1C1C;
+  color: #fff;
+}
+
+.gallery-scene {
+  position: relative;
+  min-height: 100%;
+}
+
+.gallery-view {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1000px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #2E2E2E;
+}
+
+.gallery-view.loading {
+  height: 60px;
+}
+
+.gallery-view.loading:before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 20px;
+  height: 20px;
+  border: 3px rgba(255, 0, 0, 0.15) solid;
+  border-top: 2px rgb(255, 0, 0) solid;
+  border-radius: 50%;
+  -webkit-animation: spin .6s infinite linear;
+  animation: spin .6s infinite linear;
+  content: '';
+}
+
+.gallery-view-header {
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1000px;
+  border-bottom: 1px solid #2E2E2E;
+  margin-bottom: 20px;
+}
+
+.gallery-favorite-button {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  border: none;
+  background-color: transparent;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.gallery-favorite-button.active {
+  color: red;
+}
+
+.gallery-view-image img {
+   max-width: 100%;
+   display: block;
+   margin-left: auto;
+   margin-right: auto;
+}
+
+.gallery-view-caption {
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+.gallery-view-date {
+  font-size: 80%;
+  padding-bottom: 20px;
+  color: #6E6E6E;
+}
+
+.gallery-nav {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1000px;
+  text-align: center;
+}
+
+.gallery-nav {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  opacity: .3;
+  transition: .3s;
+}
+
+.gallery-nav:hover {
+  opacity: 1;
+}
+
+.gallery-nav ul {
+  margin: 0;
+  padding: 0;
+}
+
+.gallery-nav li {
+  position: relative;
+  display: inline-block;
+  text-indent: -100000px;
+  line-height: 100000px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 5px;
+  width: 7px;
+  height: 7px;
+  font-size: 11px;
+}
+
+.gallery-nav li:before {
+  content: '';
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #fff;
+  color: #fff;
+}
+
+.gallery-nav li.viewed {
+  opacity: .5;
+}
+
+.gallery-nav li.active:before {
+  background-color: red;
+  color: red;
+}
+
+.gallery-nav li.favorite:before {
+  position: absolute;
+  top: 9px;
+  left: 2px;
+  content: '★';
+  background-color: transparent;
+  text-indent: 0;
+  line-height: 0;
+}
+
+.gallery-view-n-nav {
+  position: relative;
+}
+
+.gallery-nav-prev,
+.gallery-nav-next {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  display: block;
+  width: 50%;
+  background: transparent;
+  border: none;
+  text-indent: -100000px;
+  line-height: 100000px;
+  overflow: hidden;
+}
+
+.gallery-nav-prev:focus,
+.gallery-nav-next:focus {
+  outline: none;
+}
+
+.gallery-nav-prev {
+  left: 0;
+}
+
+.gallery-nav-next {
+  right: 0;
+}
+
+.discuss-container {
+  background-color: #fff;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.discuss-thread {
+  margin-left: auto;
+  margin-right: auto;
+  max-width: 1000px;
+}
+
+/**
+ * Animations.
+ */
+@-webkit-keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg); }
+  to {
+    -webkit-transform: rotate(359deg); } }
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg); }
+  to {
+    transform: rotate(359deg); } }
