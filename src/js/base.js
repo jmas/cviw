@@ -9,7 +9,7 @@ define(function () {
    * * el Element that contain this component
    * * data Object with key-value data
    * @class Base
-   * @param {Object} config - A key-value object of component configuration.
+   * @param {Object<{el: Element}>} config - A key-value object of component configuration.
    */
   function Base(config) {
     config = config || {};
@@ -36,7 +36,7 @@ define(function () {
    * Afeter update() render() is called.
    * @method
    * @memberOf Base
-   * @param {Object<{el: Element}>} data
+   * @param {Object} data
    * @param {Boolean} force
    */
   Base.prototype.update = function (data, force) {
