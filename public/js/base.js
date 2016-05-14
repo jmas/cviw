@@ -9,7 +9,7 @@ define(function () {
    * * el Element that contain this component
    * * data Object with key-value data
    * @class Base
-   * @param {Object<{el: Element}>} config - A key-value object of component configuration.
+   * @param {Object} config - A key-value object of component configuration.
    */
   function Base(config) {
     config = config || {};

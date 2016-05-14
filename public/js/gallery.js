@@ -2,7 +2,7 @@
  * @author Alexander Maslakov <jmas.ukraine@gmail.com>
  * @license MIT
  */
-define(['./base'], function (Base) {
+define(['./base', './utils'], function (Base, utils) {
   /**
    * Gallery component class.
    * * el Element that contain this component
@@ -60,6 +60,7 @@ define(['./base'], function (Base) {
     this.navEl.addEventListener('click', this.handleNavClick.bind(this), true);
     this.imageNavPrevEl.addEventListener('click', this.handleNavPrevClick.bind(this), true);
     this.imageNavNextEl.addEventListener('click', this.handleNavNextClick.bind(this), true);
+    this.viewHeaderEl.addEventListener('click', this.handleHeaderClick.bind(this), true);
   }
 
   Gallery.prototype = Base.prototype;
@@ -101,6 +102,23 @@ define(['./base'], function (Base) {
   Gallery.prototype.handleNavNextClick = function (event) {
     event.preventDefault();
     this.changeImageViewToNext();
+  };
+
+  /**
+   * Handler for the header link click.
+   * @memberOf Gallery
+   * @param event
+   */
+  Gallery.prototype.handleHeaderClick = function (event) {
+    event.preventDefault();
+    var url = event.target.getAttribute('href');
+    if (url) {
+      try {
+        window.open(url);
+      } catch (exception) {
+        alert('Open URL is blocked by browser.');
+      }
+    }
   };
 
   /**
@@ -157,7 +175,7 @@ define(['./base'], function (Base) {
   /**
    * Get gallery image by it ID.
    * @memberOf Gallery
-   * @param {string|integer} id
+   * @param {String|Number} id
    * @returns {Object|null}
    */
   Gallery.prototype.getImageById = function (id) {
@@ -171,13 +189,28 @@ define(['./base'], function (Base) {
   };
 
   /**
+   * Get image index by it ID.
+   * @param {String|Number} id
+   * @returns {*}
+   */
+  Gallery.prototype.getImageIndexById = function (id) {
+    id = String(id);
+    for (var i = 0, ln = this.data.images.length; i < ln; i++) {
+      if (String(this.data.images[i].id) === id) {
+        return i;
+      }
+    }
+    return null;
+  };
+
+  /**
    * Render gallery header.
    * @memberOf Gallery
    */
   Gallery.prototype.renderHeader = function () {
     var viewImage = this.getViewImage();
     if (viewImage) {
-      this.viewHeaderEl.innerHTML = '<div class="gallery-view-caption">' + viewImage.text + '</div>'
+      this.viewHeaderEl.innerHTML = '<div class="gallery-view-caption">' + utils.linkify(viewImage.text) + '</div>'
         + '<div class="gallery-view-date">' + viewImage.date + '</div>'
         + '<button class="js-gallery-favorite-button gallery-favorite-button '
         + (viewImage.favorite ? ' active ' : '') + '" data-image-id="' + viewImage.id + '">★</button>';
@@ -216,18 +249,20 @@ define(['./base'], function (Base) {
         this.viewEl.innerHTML = '';
       }
       var imageEl = this.viewEl.querySelector('img');
-      var viewEl = this.viewEl;
-      imageEl.style.display = 'none';
-      viewEl.classList.add('loading');
-      var image = new Image;
-      image.onload = function () {
-        imageEl.style.width = this.width + 'px';
-        imageEl.style.display = '';
-        viewEl.classList.remove('loading');
-        image = null;
-      };
-      image.src = viewImage.imageUrl;
-      this.viewEl.setAttribute('data-view-index', this.data.viewIndex);
+      if (imageEl) {
+        var viewEl = this.viewEl;
+        imageEl.style.display = 'none';
+        viewEl.classList.add('loading');
+        var image = new Image;
+        image.onload = function () {
+          imageEl.style.width = this.width + 'px';
+          imageEl.style.display = '';
+          viewEl.classList.remove('loading');
+          image = null;
+        };
+        image.src = viewImage.imageUrl;
+        this.viewEl.setAttribute('data-view-index', this.data.viewIndex);
+      }
     }
   };
 

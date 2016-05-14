@@ -16,6 +16,7 @@ require(['./gallery', './misc', './api'], function(Gallery, misc, api) {
     var reportImageViewTimer = null;
     var galleryId = 1;
     var galleryContainerEl = document.querySelector(gallerySelector);
+    var containerImageId = galleryContainerEl.getAttribute('data-image-id');
 
     // create gallery instance
     var gallery = new Gallery({
@@ -27,8 +28,8 @@ require(['./gallery', './misc', './api'], function(Gallery, misc, api) {
      */
     gallery.onUpdate = function () {
       var viewImage = this.getViewImage();
-      var imageId = viewImage.id;
-      if (viewImage && lastViewImageId !== imageId) {
+      if (viewImage && lastViewImageId !== viewImage.id) {
+        var imageId = viewImage.id;
         // chanfe url
         misc.updateUrl(viewImage, viewImage.text, '/view/' + imageId);
         misc.updateDisqus(imageId, viewImage.text, '/view/' + imageId);
@@ -49,31 +50,42 @@ require(['./gallery', './misc', './api'], function(Gallery, misc, api) {
       }
       // handle favorite button click
       var favoriteButtonEl = galleryContainerEl.querySelector('.js-gallery-favorite-button');
-      favoriteButtonEl.addEventListener('click', function (event) {
-        event.preventDefault();
-        var target = event.target;
-        var imageId = target.getAttribute('data-image-id');
-        var image = gallery.getImageById(imageId);
-        api.toggleImageFavorite(imageId, ! image.favorite).then(function () {
+      if (favoriteButtonEl) {
+        favoriteButtonEl.addEventListener('click', function (event) {
+          event.preventDefault();
+          var target = event.target;
+          var imageId = target.getAttribute('data-image-id');
           var image = gallery.getImageById(imageId);
-          if (image) {
-            image.favorite = ! image.favorite;
-            gallery.updateImage(image);
-            if (image.favorite) {
-              target.classList.add('active');
-            } else {
-              target.classList.remove('active');
+          api.toggleImageFavorite(imageId, !image.favorite).then(function () {
+            var image = gallery.getImageById(imageId);
+            if (image) {
+              image.favorite = !image.favorite;
+              gallery.updateImage(image);
+              if (image.favorite) {
+                target.classList.add('active');
+              } else {
+                target.classList.remove('active');
+              }
             }
-          }
+          });
         });
-      });
+      }
     };
 
     // load images
     api.loadGalleryImages(galleryId).then(function (images) {
+      var viewIndex = 0;
       gallery.update({
         images: images
       });
+      if (containerImageId) {
+        viewIndex = gallery.getImageIndexById(containerImageId);
+      }
+      if (viewIndex) {
+        gallery.update({
+          viewIndex: viewIndex
+        });
+      }
     });
 
     // handle keyboard events
