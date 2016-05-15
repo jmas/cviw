@@ -11,11 +11,7 @@ require([
   'use strict';
 
   /**
-   * @namespace pages.gallery
-   */
-
-  /**
-   * @memberOf pages.gallery
+   * @private
    * @param {String} gallerySelector
    * @returns {Gallery}
    */
