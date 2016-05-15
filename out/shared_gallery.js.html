@@ -1,20 +1,50 @@
-/**
- * @author Alexander Maslakov <jmas.ukraine@gmail.com>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: shared/Gallery.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: shared/Gallery.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * @author Alexander Maslakov &lt;jmas.ukraine@gmail.com>
  * @license MIT
  */
-define(['./base', './utils'], function (Base, utils) {
+define(['fwk/Cmp', 'shared/utils'], function (Cmp, utils) {
+  'use strict';
+
   /**
    * Gallery component class.
-   * * el Element that contain this component
-   * * data Object with key-value data
-   * * image Array of objects each of that contain info about image
-   * * viewIndex Is current view image
    * @class Gallery
-   * @extends Base
-   * @param {Object<{el: Element, images: Array, viewIndex: Number}>} config - A key-value object of component configuration.
+   * @extends Cmp
+   * @param {Object} config A key-value object of component configuration.
+   * @param {Element} config.el Element that contain this component
+   * @param {Object} config.data [optional] Object with key-value data
+   * @param {Array} config.image Array of objects each of that contain info about image
+   * @param {Number} config.viewIndex Index of current view image of config.image array
    */
   function Gallery(config) {
-    Base.call(this, Object.assign({
+    Cmp.call(this, Object.assign({
       data: {
         images: [],
         viewIndex: 0
@@ -63,7 +93,7 @@ define(['./base', './utils'], function (Base, utils) {
     this.viewHeaderEl.addEventListener('click', this.handleHeaderClick.bind(this), true);
   }
 
-  Gallery.prototype = Base.prototype;
+  Gallery.prototype = Cmp.prototype;
   Gallery.prototype.constructor = Gallery;
 
   /**
@@ -130,7 +160,7 @@ define(['./base', './utils'], function (Base, utils) {
     var viewIndex = this.get('viewIndex') || 0;
     var imagesLength = this.get('images').length;
     this.update({
-      viewIndex: viewIndex < imagesLength - 1 ? viewIndex + 1 : 0
+      viewIndex: viewIndex &lt; imagesLength - 1 ? viewIndex + 1 : 0
     });
   };
 
@@ -180,7 +210,7 @@ define(['./base', './utils'], function (Base, utils) {
    */
   Gallery.prototype.getImageById = function (id) {
     id = String(id);
-    for (var i = 0, ln = this.data.images.length; i < ln; i++) {
+    for (var i = 0, ln = this.data.images.length; i &lt; ln; i++) {
       if (String(this.data.images[i].id) === id) {
         return this.data.images[i];
       }
@@ -195,7 +225,7 @@ define(['./base', './utils'], function (Base, utils) {
    */
   Gallery.prototype.getImageIndexById = function (id) {
     id = String(id);
-    for (var i = 0, ln = this.data.images.length; i < ln; i++) {
+    for (var i = 0, ln = this.data.images.length; i &lt; ln; i++) {
       if (String(this.data.images[i].id) === id) {
         return i;
       }
@@ -210,10 +240,10 @@ define(['./base', './utils'], function (Base, utils) {
   Gallery.prototype.renderHeader = function () {
     var viewImage = this.getViewImage();
     if (viewImage) {
-      this.viewHeaderEl.innerHTML = '<div class="gallery-view-caption">' + utils.linkify(viewImage.text) + '</div>'
-        + '<div class="gallery-view-date">' + viewImage.date + '</div>'
-        + '<button class="js-gallery-favorite-button gallery-favorite-button '
-        + (viewImage.favorite ? ' active ' : '') + '" data-image-id="' + viewImage.id + '">★</button>';
+      this.viewHeaderEl.innerHTML = '&lt;div class="gallery-view-caption">' + utils.linkify(viewImage.text) + '&lt;/div>'
+        + '&lt;div class="gallery-view-date">' + viewImage.date + '&lt;/div>'
+        + '&lt;button class="js-gallery-favorite-button gallery-favorite-button '
+        + (viewImage.favorite ? ' active ' : '') + '" data-image-id="' + viewImage.id + '">★&lt;/button>';
     } else {
       this.viewHeaderEl.innerHTML = '';
     }
@@ -224,14 +254,14 @@ define(['./base', './utils'], function (Base, utils) {
    * @memberOf Gallery
    */
   Gallery.prototype.renderNav = function () {
-    var navHtml = '<ul>';
-    for (var i = 0, ln = this.data.images.length; i < ln; i++) {
-      navHtml += '<li class="' + (i === this.data.viewIndex ? ' active ' : '')
+    var navHtml = '&lt;ul>';
+    for (var i = 0, ln = this.data.images.length; i &lt; ln; i++) {
+      navHtml += '&lt;li class="' + (i === this.data.viewIndex ? ' active ' : '')
         + (this.data.images[i].favorite ? ' favorite ' : '')
         + (this.data.images[i].viewed ? ' viewed ' : '')
-        + '" data-view-index="' + i + '">' + this.data.images[i].date + '</li>';
+        + '" data-view-index="' + i + '">' + this.data.images[i].date + '&lt;/li>';
     }
-    navHtml += '</ul>';
+    navHtml += '&lt;/ul>';
     this.navEl.innerHTML = navHtml;
   };
 
@@ -244,7 +274,7 @@ define(['./base', './utils'], function (Base, utils) {
     if (lastViewIndex !== this.data.viewIndex) {
       var viewImage = this.getViewImage();
       if (viewImage) {
-        this.viewEl.innerHTML = '<div class="gallery-view-image"><img src="' + viewImage.imageUrl + '" /></div>';
+        this.viewEl.innerHTML = '&lt;div class="gallery-view-image">&lt;img src="' + viewImage.imageUrl + '" />&lt;/div>';
       } else {
         this.viewEl.innerHTML = '';
       }
@@ -279,3 +309,26 @@ define(['./base', './utils'], function (Base, utils) {
 
   return Gallery;
 });
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Cmp.html">Cmp</a></li><li><a href="Gallery.html">Gallery</a></li></ul><h3>Namespaces</h3><ul><li><a href="api.html">api</a></li><li><a href="http.html">http</a></li><li><a href="utils.html">utils</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Sun May 15 2016 14:01:38 GMT+0300 (EEST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

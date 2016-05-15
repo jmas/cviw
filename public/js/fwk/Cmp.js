@@ -3,26 +3,27 @@
  * @license MIT
  */
 define(function () {
+  'use strict';
+
   /**
-   * Base component class.
-   * Config can contain following options:
-   * * el Element that contain this component
-   * * data Object with key-value data
-   * @class Base
-   * @param {Object} config - A key-value object of component configuration.
+   * Cmp component class.
+   * @class Cmp
+   * @param {Object} config A key-value object of component configuration.
+   * @param {Element} config.el Element that contain this component
+   * @param {Object} config.data [optional] Object with key-value data
    */
-  function Base(config) {
+  function Cmp(config) {
     config = config || {};
 
     /**
-     * @memberOf Base
+     * @memberOf Cmp
      * @public
      * @type {Element}
      */
     this.el = config.el;
 
     /**
-     * @memberOf Base
+     * @memberOf Cmp
      * @private
      * @type {Object}
      */
@@ -35,11 +36,12 @@ define(function () {
    * fully replaced.
    * Afeter update() render() is called.
    * @method
-   * @memberOf Base
+   * @memberOf Cmp
    * @param {Object} data
-   * @param {Boolean} force
+   * @param {Boolean} silent [optional] Prevent call render() and onUpdate()
+   * @param {Boolean} force [optional] Force replace all data with new data-object
    */
-  Base.prototype.update = function (data, force) {
+  Cmp.prototype.update = function (data, silent, force) {
     data = data || {};
     if (force) {
       this.data = data;
@@ -48,36 +50,38 @@ define(function () {
         this.data[key] = data[key];
       }
     }
-    this.render();
-    this.onUpdate();
+    if (! silent) {
+      this.render();
+      this.onUpdate();
+    }
   };
 
   /**
    * @method
-   * @memberOf Base
+   * @memberOf Cmp
    * @param {String} key
    * @returns {*}
    */
-  Base.prototype.get = function (key) {
+  Cmp.prototype.get = function (key) {
     return (typeof this.data[key] !== 'undefined' ? this.data[key] : null);
   };
 
   /**
    * This method shoudl contain all DOM operations with
    * component children.
-   * @memberOf Base
+   * @memberOf Cmp
    * @abstract
    */
-  Base.prototype.render = function () {
+  Cmp.prototype.render = function () {
   };
 
   /**
    * This method is called each time after update.
-   * @memberOf Base
+   * @memberOf Cmp
    * @abstract
    */
-  Base.prototype.onUpdate = function () {
+  Cmp.prototype.onUpdate = function () {
   };
 
-  return Base;
+  return Cmp;
 });
