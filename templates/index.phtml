@@ -7,7 +7,15 @@
 <body>
 <h1>CVIW</h1>
 
-
+<?php if ($galleries): ?>
+<ul>
+    <?php foreach ($galleries as $gallery): ?>
+    <li><a href="/gallery/<?= $gallery['id']; ?>"><?= $gallery['name']; ?></a></li>
+    <?php endforeach; ?>
+</ul>
+<?php else: ?>
+<p>Nothing.</p>
+<?php endif; ?>
 
 </body>
 </html>

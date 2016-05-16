@@ -81,17 +81,17 @@ require([
     api.loadGalleryImages(containerGalleryId)
       .then(function (images) {
         var viewIndex = 0;
-        gallery.update({
-          images: images
-        }, true);
+        if (images) {
+          gallery.update({
+            images: images
+          }, true);
+        }
         if (containerImageId) {
           viewIndex = gallery.getImageIndexById(containerImageId);
         }
-        if (viewIndex) {
-          gallery.update({
-            viewIndex: viewIndex
-          });
-        }
+        gallery.update({
+          viewIndex: viewIndex
+        });
       })
       .catch(function () {
         window.replace('/');

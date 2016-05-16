@@ -212,8 +212,8 @@ define(['fwk/Cmp', 'shared/utils'], function (Cmp, utils) {
   Gallery.prototype.renderHeader = function () {
     var viewImage = this.getViewImage();
     if (viewImage) {
-      this.viewHeaderEl.innerHTML = '<div class="gallery-view-caption">' + utils.linkify(viewImage.text) + '</div>'
-        + '<div class="gallery-view-date">' + viewImage.date + '</div>'
+      this.viewHeaderEl.innerHTML = '<div class="gallery-view-caption">' + utils.linkify(viewImage.description) + '</div>'
+        + '<div class="gallery-view-date">' + viewImage.create_date + '</div>'
         + '<button class="js-gallery-favorite-button gallery-favorite-button '
         + (viewImage.favorite ? ' active ' : '') + '" data-image-id="' + viewImage.id + '">★</button>';
     } else {
@@ -231,7 +231,7 @@ define(['fwk/Cmp', 'shared/utils'], function (Cmp, utils) {
       navHtml += '<li class="' + (i === this.data.viewIndex ? ' active ' : '')
         + (this.data.images[i].favorite ? ' favorite ' : '')
         + (this.data.images[i].viewed ? ' viewed ' : '')
-        + '" data-view-index="' + i + '">' + this.data.images[i].date + '</li>';
+        + '" data-view-index="' + i + '">' + this.data.images[i].create_date + '</li>';
     }
     navHtml += '</ul>';
     this.navEl.innerHTML = navHtml;
@@ -246,7 +246,7 @@ define(['fwk/Cmp', 'shared/utils'], function (Cmp, utils) {
     if (lastViewIndex !== this.data.viewIndex) {
       var viewImage = this.getViewImage();
       if (viewImage) {
-        this.viewEl.innerHTML = '<div class="gallery-view-image"><img src="' + viewImage.imageUrl + '" /></div>';
+        this.viewEl.innerHTML = '<div class="gallery-view-image"><img src="' + viewImage.image_url + '" /></div>';
       } else {
         this.viewEl.innerHTML = '';
       }
@@ -262,7 +262,7 @@ define(['fwk/Cmp', 'shared/utils'], function (Cmp, utils) {
           viewEl.classList.remove('loading');
           image = null;
         };
-        image.src = viewImage.imageUrl;
+        image.src = viewImage.image_url;
         this.viewEl.setAttribute('data-view-index', this.data.viewIndex);
       }
     }

@@ -13,5 +13,12 @@ return [
             'name' => 'slim-app',
             'path' => __DIR__ . '/../logs/app.log',
         ],
+
+        // Database connection
+        'db' => [
+            'dsn' => 'mysql:host=127.0.0.1;dbname=cviw;charset=utf8',
+            'user' => 'root',
+            'password' => '',
+        ],
     ],
 ];
