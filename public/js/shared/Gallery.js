@@ -2,7 +2,11 @@
  * @author Alexander Maslakov <jmas.ukraine@gmail.com>
  * @license MIT
  */
-define(['fwk/Cmp', 'shared/utils'], function (Cmp, utils) {
+define([
+  'fwk/Cmp',
+  'shared/utils',
+  'momentjs'
+], function (Cmp, utils, momentjs) {
   'use strict';
 
   /**
@@ -63,6 +67,7 @@ define(['fwk/Cmp', 'shared/utils'], function (Cmp, utils) {
     this.imageNavPrevEl.addEventListener('click', this.handleNavPrevClick.bind(this), true);
     this.imageNavNextEl.addEventListener('click', this.handleNavNextClick.bind(this), true);
     this.viewHeaderEl.addEventListener('click', this.handleHeaderClick.bind(this), true);
+    this.renderImageViewTimeout = null;
   }
 
   Gallery.prototype = Cmp.prototype;
@@ -212,8 +217,9 @@ define(['fwk/Cmp', 'shared/utils'], function (Cmp, utils) {
   Gallery.prototype.renderHeader = function () {
     var viewImage = this.getViewImage();
     if (viewImage) {
+      var momentDate = momentjs.unix(viewImage.create_date);
       this.viewHeaderEl.innerHTML = '<div class="gallery-view-caption">' + utils.linkify(viewImage.description) + '</div>'
-        + '<div class="gallery-view-date">' + viewImage.create_date + '</div>'
+        + '<div class="gallery-view-date">' + momentDate.format('LL') + ' (' + momentDate.fromNow() + ')</div>'
         + '<button class="js-gallery-favorite-button gallery-favorite-button '
         + (viewImage.favorite ? ' active ' : '') + '" data-image-id="' + viewImage.id + '">★</button>';
     } else {
@@ -227,11 +233,13 @@ define(['fwk/Cmp', 'shared/utils'], function (Cmp, utils) {
    */
   Gallery.prototype.renderNav = function () {
     var navHtml = '<ul>';
+    var dateText;
     for (var i = 0, ln = this.data.images.length; i < ln; i++) {
+      dateText = momentjs.unix(this.data.images[i].create_date).fromNow();
       navHtml += '<li class="' + (i === this.data.viewIndex ? ' active ' : '')
         + (this.data.images[i].favorite ? ' favorite ' : '')
         + (this.data.images[i].viewed ? ' viewed ' : '')
-        + '" data-view-index="' + i + '">' + this.data.images[i].create_date + '</li>';
+        + '" data-view-index="' + i + '" title="#' + i + ', ' + dateText + '">' + dateText + '</li>';
     }
     navHtml += '</ul>';
     this.navEl.innerHTML = navHtml;
@@ -275,7 +283,8 @@ define(['fwk/Cmp', 'shared/utils'], function (Cmp, utils) {
    */
   Gallery.prototype.render = function () {
     this.renderHeader();
-    this.renderImageView();
+    clearTimeout(this.renderImageViewTimeout);
+    this.renderImageViewTimeout = setTimeout(this.renderImageView.bind(this), 100);
     this.renderNav();
   };
 

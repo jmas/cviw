@@ -93,8 +93,8 @@ require([
           viewIndex: viewIndex
         });
       })
-      .catch(function () {
-        window.replace('/');
+      .catch(function (exception) {
+        window.location.replace('/');
       });
 
     // handle keyboard events

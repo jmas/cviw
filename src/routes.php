@@ -20,7 +20,11 @@ $app->get('/gallery/{galleryId}[/image/{imageId}]', function ($request, $respons
 });
 
 $app->post('/gallery/{galleryId}/image/{imageId}/view', function ($request, $response, $args) {
-    return $response->withJson(true);
+    $imageId = $request->getAttribute('imageId', null);
+    $insertStatement = $this->db->insert(array('user_id', 'image_id', 'create_date'))
+        ->into('user_view_image')
+        ->values(array(1, $imageId, time()));
+    return $response->withJson($insertStatement->execute(false) !== false);
 });
 
 $app->post('/gallery/{galleryId}/image/{imageId}/favorite', function ($request, $response, $args) {
@@ -29,10 +33,20 @@ $app->post('/gallery/{galleryId}/image/{imageId}/favorite', function ($request, 
 
 $app->get('/gallery/{galleryId}/images', function ($request, $response, $args) {
     $galleryId = $request->getAttribute('galleryId', null);
-    $selectStatement = $this->db->select()
+    $selectStatement = $this->db->select(['image.*', 'user_view_image.create_date AS view_date'])
         ->from('image')
-        ->where('gallery_id', '=', $galleryId);
+        ->leftJoin('user_view_image', 'image.id', '=', 'user_view_image.image_id')
+        ->where('image.gallery_id', '=', $galleryId);
     $stmt = $selectStatement->execute();
     $data = $stmt->fetchAll();
+    foreach ($data as $i => $item) {
+        $data[$i]['description'] = htmlspecialchars($data[$i]['description']);
+        $data[$i]['image_url'] = str_replace('https', 'http', $data[$i]['image_url']);
+        $data[$i]['viewed'] = (! empty($data[$i]['view_date']));
+    }
     return $response->withJson($data);
+});
+
+$app->get('/update', function ($request, $response, $args) {
+    return 'response';
 });

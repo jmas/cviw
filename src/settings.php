@@ -1,4 +1,9 @@
 <?php
+
+require __DIR__ . '/../env.php';
+
+date_default_timezone_set('UTC');
+
 return [
     'settings' => [
         'displayErrorDetails' => true, // set to false in production
@@ -16,9 +21,9 @@ return [
 
         // Database connection
         'db' => [
-            'dsn' => 'mysql:host=127.0.0.1;dbname=cviw;charset=utf8',
-            'user' => 'root',
-            'password' => '',
+            'dsn' => DB_DSN,
+            'user' => DB_USER,
+            'password' => DB_PASSWORD,
         ],
     ],
 ];

@@ -21,5 +21,8 @@ $container['logger'] = function ($c) {
 // Database
 $container['db'] = function ($c) {
     $settings = $c->get('settings')['db'];
-    return new \Slim\PDO\Database($settings['dsn'], $settings['user'], $settings['password']);
+    $db = new \Slim\PDO\Database($settings['dsn'], $settings['user'], $settings['password']);
+    $db->query('SET GLOBAL time_zone="+00:00"');
+    $db->query('SET NAMES utf8');
+    return $db;
 };
