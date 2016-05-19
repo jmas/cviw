@@ -21,6 +21,22 @@ function fetchFacebookPhotos ($pageId, $limit=500, $after='') {
     return json_decode($content, true);
 }
 
+function fetchDeveloperslifeGifs ($pageId) {
+    $requestUrl = 'http://developerslife.ru/latest/' . $pageId;
+    $content = file_get_contents($requestUrl);
+    if ($content === false) {
+        throw new Exception("Can't do HTTP request to retrieve photos from Facebook Graph.");
+    }
+    $matches = [];
+    $pageMatches = [];
+    preg_match_all('/<div class="gif">.+?<img.+?src="(http[^"]+?\.gif)".+?alt="([^"]+?)".+?\/(\d+?)#comments/is', $content, $matches, PREG_SET_ORDER);
+    preg_match('/<a href="\/latest\/(\d+?)" class="jslink nextPage">/', $content, $pageMatches);
+    return [
+        'data' => $matches,
+        'nextPageId' => (! empty($pageMatches) ? $pageMatches[1]: null),
+    ];
+}
+
 /**
  * @return array
  * @throws Exception
@@ -33,6 +49,7 @@ function fetchGalleriesImages () {
         $outerId = substr($gallery['outer_id'], strpos($gallery['outer_id'], '://')+3);
         $newestGalleryImage = getNewestGalleryImage($gallery['id']);
         $newestGalleryImageDate = $newestGalleryImage ? $newestGalleryImage['create_date']: 0;
+        print('fetch-' . $outerType . "\n");
         switch ($outerType) {
             // facebook
             case 'fb':
@@ -59,13 +76,42 @@ function fetchGalleriesImages () {
                             break;
                         }
                     }
-                    print('fb-new-images: ' . count($images) . "\n");
                     if ($isNewestFetched) {
                         break;
                     }
                 }
                 break;
+            case 'devlife':
+                $pageId = 0;
+                while (true) {
+                    print('fetch-devlife-page-' . $pageId . "\n");
+                    $response = fetchDeveloperslifeGifs($pageId);
+                    if (empty($response['nextPageId'])) {
+                        break;
+                    }
+                    $isNewestFetched = false;
+                    foreach ($response['data'] as $dataItem) {
+                        $itemOuterId = 'devlife-image://' . $dataItem[3];
+                        if ($newestGalleryImage && $newestGalleryImage['outer_id'] === $itemOuterId) {
+                            $isNewestFetched = true;
+                            break;
+                        }
+                        $images[] = [
+                            'gallery_id' => $gallery['id'],
+                            'outer_id' => $itemOuterId,
+                            'description' => ! empty($dataItem[2]) ? $dataItem[2]: '',
+                            'image_url' => $dataItem[1],
+                            'create_date' => time() + (int)$dataItem[3],
+                        ];
+                    }
+                    if ($isNewestFetched) {
+                        break;
+                    }
+                    $pageId = $response['nextPageId'];
+                }
+                break;
         }
+        print('images-count: ' . count($images) . "\n");
     }
     return $images;
 }
