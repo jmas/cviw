@@ -46,7 +46,7 @@ define([
      * @private
      * @type {Element}
      */
-    this.viewHeaderEl = this.el.querySelector('.js-gallery-view-header');
+    this.viewHeaderEl = this.el.querySelector('.js-gallery-header');
 
     /**
      * @memberOf Gallery
@@ -218,10 +218,17 @@ define([
     var viewImage = this.getViewImage();
     if (viewImage) {
       var momentDate = momentjs.unix(viewImage.create_date);
-      this.viewHeaderEl.innerHTML = '<div class="gallery-view-caption">' + utils.linkify(viewImage.description) + '</div>'
-        + '<div class="gallery-view-date">' + momentDate.format('LL') + ' (' + momentDate.fromNow() + ')</div>'
+      this.viewHeaderEl.innerHTML =
+          '<div class="gallery-header-buttons">'
+        + '<a href="' + viewImage.image_url + '" target="_blank">&#10150;</a>'
         + '<button class="js-gallery-favorite-button gallery-favorite-button '
-        + (viewImage.favorite ? ' active ' : '') + '" data-image-id="' + viewImage.id + '">★</button>';
+        + (viewImage.favorite ? ' active ' : '') + '" data-image-id="' + viewImage.id + '">★</button>'
+        + '</div>'
+        + '<div class="gallery-header-">'
+        + '<div class="gallery-header-caption">' + utils.linkify(viewImage.description) + '</div>'
+        + '<div class="gallery-header-date">' + momentDate.format('LL') + ' (' + momentDate.fromNow() + ')</div>'
+        + '</div>'
+        ;
     } else {
       this.viewHeaderEl.innerHTML = '';
     }

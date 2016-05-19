@@ -39,7 +39,7 @@ function fetchGalleriesImages () {
                 $after = '';
                 while (true) {
                     $response = fetchFacebookPhotos($outerId, 1000, $after);
-                    if (empty($response) ||  empty($response['paging'])) {
+                    if (empty($response) || empty($response['paging'])) {
                         break;
                     }
                     $after = $response['paging']['cursors']['after'];
