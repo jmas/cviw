@@ -14,4 +14,4 @@ Alexander Maslakov <jmas.ukraine@gmail.com>
 
 ## License
 
-MIT LIcense
+MIT License
