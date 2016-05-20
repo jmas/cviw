@@ -52,7 +52,7 @@ define(function () {
     }
     if (! silent) {
       this.render();
-      this.onUpdate();
+      window.requestAnimationFrame(this.onUpdate.bind(this));
     }
   };
 

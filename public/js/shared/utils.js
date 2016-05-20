@@ -45,14 +45,16 @@ define(function () {
         }, 3000);
         return;
       }
-      try{
-        DISQUS.reset({
-          reload: true,
-          config: function () {
-            this.page.identifier = identifier;
-            this.page.url = url;
-            this.page.title = title;
-          }
+      try {
+        window.requestAnimationFrame(function () {
+          DISQUS.reset({
+            reload: true,
+            config: function () {
+              this.page.identifier = identifier;
+              this.page.url = url;
+              this.page.title = title;
+            }
+          });
         });
       } catch(e){ }
     },

@@ -13,7 +13,7 @@ define(function () {
      * Wait in seconds before send report image view request.
      * @memberOf consts
      */
-    REPORT_IMAGE_VIEW_WAIT: 5000,
+    REPORT_IMAGE_VIEW_WAIT: 3000,
 
     /**
      * URI of gallery images.

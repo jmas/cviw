@@ -249,7 +249,12 @@ define([
         + '" data-view-index="' + i + '" title="#' + i + ', ' + dateText + '">' + dateText + '</li>';
     }
     navHtml += '</ul>';
-    this.navEl.innerHTML = navHtml;
+    if (this.navEl.firstChild) {
+      this.navEl.removeChild(this.navEl.firstChild);
+    }
+    var newChild = document.createElement('DIV');
+    newChild.innerHTML = navHtml;
+    this.navEl.appendChild(newChild.firstChild);
   };
 
   /**
@@ -289,10 +294,10 @@ define([
    * @override
    */
   Gallery.prototype.render = function () {
-    this.renderHeader();
+    window.requestAnimationFrame(this.renderHeader.bind(this));
     clearTimeout(this.renderImageViewTimeout);
     this.renderImageViewTimeout = setTimeout(this.renderImageView.bind(this), 100);
-    this.renderNav();
+    window.requestAnimationFrame(this.renderNav.bind(this));
   };
 
   return Gallery;
