@@ -72,6 +72,26 @@ define(function () {
       } catch (e) {
         window.location.replace('#' + url);
       }
+    },
+
+    /**
+     * @param {Element} el
+     */
+    clearNode: function (el) {
+        if (el.firstChild) {
+          while (el.firstChild) {
+            el.removeChild(el.firstChild);
+          }
+        }
+    },
+
+    /**
+     * @param el
+     * @param html
+     */
+    replaceHtml: function (el, html) {
+      this.clearNode(el);
+      el.insertAdjacentHTML('beforeend', html);
     }
   };
 });

@@ -218,7 +218,7 @@ define([
     var viewImage = this.getViewImage();
     if (viewImage) {
       var momentDate = momentjs.unix(viewImage.create_date);
-      this.viewHeaderEl.innerHTML =
+      utils.replaceHtml(this.viewHeaderEl,
           '<div class="gallery-header-buttons">'
         + '<a href="' + viewImage.image_url + '" target="_blank">&#10150;</a>'
         + '<button class="js-gallery-favorite-button gallery-favorite-button '
@@ -227,10 +227,9 @@ define([
         + '<div class="gallery-header-">'
         + '<div class="gallery-header-caption">' + utils.linkify(viewImage.description) + '</div>'
         + '<div class="gallery-header-date">' + momentDate.format('LL') + ' (' + momentDate.fromNow() + ')</div>'
-        + '</div>'
-        ;
+        + '</div>');
     } else {
-      this.viewHeaderEl.innerHTML = '';
+      utils.clearNode(this.viewHeaderEl);
     }
   };
 
@@ -253,7 +252,7 @@ define([
       this.navEl.removeChild(this.navEl.firstChild);
     }
     var newChild = document.createElement('DIV');
-    newChild.innerHTML = navHtml;
+    utils.replaceHtml(newChild, navHtml);
     this.navEl.appendChild(newChild.firstChild);
   };
 
@@ -266,9 +265,9 @@ define([
     if (lastViewIndex !== this.data.viewIndex) {
       var viewImage = this.getViewImage();
       if (viewImage) {
-        this.viewEl.innerHTML = '<div class="gallery-view-image"><img src="' + viewImage.image_url + '" /></div>';
+        utils.replaceHtml(this.viewEl, '<div class="gallery-view-image"><img src="' + viewImage.image_url + '" /></div>');
       } else {
-        this.viewEl.innerHTML = '';
+        utils.clearNode(this.viewEl);
       }
       var imageEl = this.viewEl.querySelector('img');
       if (imageEl) {
